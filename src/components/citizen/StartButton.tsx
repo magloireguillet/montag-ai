@@ -1,22 +1,19 @@
 "use client";
 
 import { memo } from "react";
-import { useConversationControls, useConversationStatus } from "@elevenlabs/react";
-import { useSignedUrl } from "@/hooks/useSignedUrl";
+import { useConversationContext } from "@/components/providers/ConversationWrapper";
 import { useMicPermission } from "@/hooks/useMicPermission";
 
 export const StartButton = memo(function StartButton() {
-  const controls = useConversationControls();
-  const { status } = useConversationStatus();
-  const { fetchUrl, loading: urlLoading } = useSignedUrl();
+  const { status, startSession, endSession } = useConversationContext();
   const { permission, requestMic } = useMicPermission();
 
   const isActive = status === "connected";
-  const isConnecting = status === "connecting" || urlLoading;
+  const isConnecting = status === "connecting";
 
   async function handleClick() {
     if (isActive) {
-      controls.endSession();
+      endSession();
       return;
     }
 
@@ -27,10 +24,7 @@ export const StartButton = memo(function StartButton() {
       if (!granted) return;
     }
 
-    const signedUrl = await fetchUrl();
-    if (!signedUrl) return;
-
-    controls.startSession({ signedUrl });
+    await startSession();
   }
 
   if (permission === "denied") {

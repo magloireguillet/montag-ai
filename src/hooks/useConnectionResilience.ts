@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { useConversationStatus, useConversationControls } from "@elevenlabs/react";
-import { useSignedUrl } from "./useSignedUrl";
+import { useConversationContext } from "@/components/providers/ConversationWrapper";
 
 const MAX_RETRIES = 3;
-const BASE_DELAY = 1000; // 1s, 2s, 4s
+const BASE_DELAY = 1000;
 
 export function useConnectionResilience() {
-  const { status } = useConversationStatus();
-  const controls = useConversationControls();
-  const { getValidUrl } = useSignedUrl();
+  const { status, startSession } = useConversationContext();
   const retriesRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -22,17 +19,14 @@ export function useConnectionResilience() {
 
     await new Promise((r) => (timerRef.current = setTimeout(r, delay)));
 
-    const url = await getValidUrl();
-    if (!url) return false;
-
     try {
-      controls.startSession({ signedUrl: url });
+      await startSession();
       retriesRef.current = 0;
       return true;
     } catch {
       return attemptReconnect();
     }
-  }, [controls, getValidUrl]);
+  }, [startSession]);
 
   useEffect(() => {
     if (status === "connected") {
@@ -50,8 +44,5 @@ export function useConnectionResilience() {
     status,
     retriesExhausted: retriesRef.current >= MAX_RETRIES,
     attemptReconnect,
-    resetRetries: () => {
-      retriesRef.current = 0;
-    },
   };
 }

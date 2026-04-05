@@ -6,7 +6,8 @@
  */
 export const ELEVENLABS_CONFIG = {
   agentId: process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID ?? "",
-  serverLocation: "eu-residency" as const,
+  // serverLocation: "eu-residency" — desactive pour le MVP demo (requiert plan Enterprise)
+  // Reactiver pour la production ANSC
   overrides: {
     agent: {
       language: "fr" as const,

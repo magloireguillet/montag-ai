@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useConversationControls } from "@elevenlabs/react";
+import { useConversationContext } from "@/components/providers/ConversationWrapper";
 import { useSessionStore } from "@/store/session.store";
 
 const WARNING_THRESHOLD = 480; // 8 minutes
@@ -9,7 +9,7 @@ const MAX_DURATION = 600; // 10 minutes
 
 export function useCallDurationLimit() {
   const callStartTime = useSessionStore((s) => s.callStartTime);
-  const controls = useConversationControls();
+  const { endSession } = useConversationContext();
   const [flags, setFlags] = useState({ isWarning: false, isExpired: false });
   const elapsedRef = useRef(0);
 
@@ -27,21 +27,20 @@ export function useCallDurationLimit() {
       const isWarning = elapsed >= WARNING_THRESHOLD && elapsed < MAX_DURATION;
       const isExpired = elapsed >= MAX_DURATION;
 
-      // Only trigger re-render when flags actually change
       setFlags((prev) => {
         if (prev.isWarning === isWarning && prev.isExpired === isExpired) return prev;
         return { isWarning, isExpired };
       });
 
       if (isExpired) {
-        controls.endSession();
+        endSession();
       }
     };
 
     tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, [callStartTime, controls]);
+  }, [callStartTime, endSession]);
 
   return {
     elapsedSeconds: elapsedRef.current,

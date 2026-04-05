@@ -1,14 +1,13 @@
 "use client";
 
-import { useConversationStatus } from "@elevenlabs/react";
-import type { ConversationStatus } from "@elevenlabs/react";
+import { useConversationContext } from "@/components/providers/ConversationWrapper";
 import { TranscriptView } from "./TranscriptView";
 import { CisuAlertCard } from "./CisuAlertCard";
 import { IncidentMetrics } from "./IncidentMetrics";
 import { JsonPreview } from "./JsonPreview";
 
 export function OperatorDashboard() {
-  const { status } = useConversationStatus();
+  const { status } = useConversationContext();
 
   return (
     <div className="h-full bg-gray-900 border-l border-gray-800 flex flex-col overflow-y-auto">
@@ -43,7 +42,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function StatusDot({ status }: { status: ConversationStatus }) {
+function StatusDot({ status }: { status: string }) {
   const color =
     status === "connected"
       ? "bg-green-500"

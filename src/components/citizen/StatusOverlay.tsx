@@ -1,6 +1,7 @@
 "use client";
 
-import { useConversationStatus, useConversationMode } from "@elevenlabs/react";
+import { useRef, useEffect } from "react";
+import { useConversationContext } from "@/components/providers/ConversationWrapper";
 import { useMicPermission } from "@/hooks/useMicPermission";
 import type { OrbState } from "@/types/conversation.types";
 
@@ -16,17 +17,19 @@ const STATE_CONFIG: Record<OrbState, { label: string; color: string }> = {
 };
 
 function useOrbState(isWarning: boolean): OrbState {
-  const { status } = useConversationStatus();
-  const { mode } = useConversationMode();
+  const { status, isSpeaking } = useConversationContext();
   const { permission } = useMicPermission();
+  const hasConnectedRef = useRef(false);
+
+  useEffect(() => {
+    if (status === "connected") hasConnectedRef.current = true;
+  }, [status]);
 
   if (permission === "denied") return "mic_denied";
-  if (status === "disconnected") return "disconnected";
   if (status === "connecting") return "connecting";
-  if (status === "error") return "failed";
   if (status === "connected") {
     if (isWarning) return "timeout";
-    return mode === "speaking" ? "speaking" : "listening";
+    return isSpeaking ? "speaking" : "listening";
   }
   return "initial";
 }

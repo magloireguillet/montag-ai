@@ -28,7 +28,7 @@ export const OrbWrapper = memo(function OrbWrapper({
   getOutputVolume,
 }: OrbWrapperProps) {
   return (
-    <div className="w-full h-full min-h-[300px]">
+    <div className="w-full max-w-[500px] max-h-[500px] aspect-square mx-auto">
       <Orb
         colors={["#e74c3c", "#f39c12"]}
         agentState={agentState}

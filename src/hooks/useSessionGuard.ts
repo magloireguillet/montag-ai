@@ -1,24 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { useConversationControls } from "@elevenlabs/react";
+import { useConversationContext } from "@/components/providers/ConversationWrapper";
 
-/**
- * Ensures the ElevenLabs session is properly cleaned up on unmount
- * and page unload (prevents mic/WS leak).
- */
 export function useSessionGuard() {
-  const controls = useConversationControls();
+  const { endSession } = useConversationContext();
 
   useEffect(() => {
     const handleUnload = () => {
-      controls.endSession();
+      endSession();
     };
 
     window.addEventListener("beforeunload", handleUnload);
     return () => {
       window.removeEventListener("beforeunload", handleUnload);
-      controls.endSession();
     };
-  }, [controls]);
+  }, [endSession]);
 }

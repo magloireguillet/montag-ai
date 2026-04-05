@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ConversationWrapper } from "@/components/providers/ConversationWrapper";
+import { ElevenLabsWidget } from "@/components/citizen/ElevenLabsWidget";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,6 +31,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-gray-950 text-white">
         <ConversationWrapper>{children}</ConversationWrapper>
+        <ElevenLabsWidget />
       </body>
     </html>
   );

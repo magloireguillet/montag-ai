@@ -1,10 +1,11 @@
 "use client";
 
+import { memo } from "react";
 import { useConversationControls, useConversationStatus } from "@elevenlabs/react";
 import { useSignedUrl } from "@/hooks/useSignedUrl";
 import { useMicPermission } from "@/hooks/useMicPermission";
 
-export function StartButton() {
+export const StartButton = memo(function StartButton() {
   const controls = useConversationControls();
   const { status } = useConversationStatus();
   const { fetchUrl, loading: urlLoading } = useSignedUrl();
@@ -64,4 +65,4 @@ export function StartButton() {
       }
     </button>
   );
-}
+});

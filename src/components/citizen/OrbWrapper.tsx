@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import dynamic from "next/dynamic";
 import type { AgentState } from "@/components/ui/orb";
 
@@ -21,7 +22,11 @@ interface OrbWrapperProps {
   getOutputVolume?: () => number;
 }
 
-export function OrbWrapper({ agentState, getInputVolume, getOutputVolume }: OrbWrapperProps) {
+export const OrbWrapper = memo(function OrbWrapper({
+  agentState,
+  getInputVolume,
+  getOutputVolume,
+}: OrbWrapperProps) {
   return (
     <div className="w-full h-full min-h-[300px]">
       <Orb
@@ -32,4 +37,4 @@ export function OrbWrapper({ agentState, getInputVolume, getOutputVolume }: OrbW
       />
     </div>
   );
-}
+});

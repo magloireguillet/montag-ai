@@ -11,8 +11,7 @@ export const ELEVENLABS_CONFIG = {
     agent: {
       language: "fr" as const,
       firstMessage:
-        "Bonjour, ici Montag, agent de debordement du 18-112. " +
-        "Pouvez-vous me decrire votre situation et me donner votre adresse ?",
+        "Bonjour, ici Montag, centre 18-112. Ou etes-vous ?",
     },
   },
 } as const;

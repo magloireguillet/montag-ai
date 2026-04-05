@@ -5,6 +5,8 @@ import type { AgentState } from "@/components/ui/orb";
 import { OrbWrapper } from "./OrbWrapper";
 import { StartButton } from "./StartButton";
 import { StatusOverlay } from "./StatusOverlay";
+import { useCallDurationLimit } from "@/hooks/useCallDurationLimit";
+import { useConnectionResilience } from "@/hooks/useConnectionResilience";
 
 function useAgentState(): AgentState {
   const { status } = useConversationStatus();
@@ -17,6 +19,8 @@ function useAgentState(): AgentState {
 export function CitizenPanel() {
   const agentState = useAgentState();
   const controls = useConversationControls();
+  const { isWarning } = useCallDurationLimit();
+  useConnectionResilience();
 
   return (
     <div className="relative flex flex-col items-center justify-center h-full bg-gray-950 overflow-hidden">
@@ -30,7 +34,7 @@ export function CitizenPanel() {
       <div className="pb-12">
         <StartButton />
       </div>
-      <StatusOverlay />
+      <StatusOverlay isWarning={isWarning} />
     </div>
   );
 }

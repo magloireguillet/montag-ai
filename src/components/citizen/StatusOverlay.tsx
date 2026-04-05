@@ -15,7 +15,7 @@ const STATE_CONFIG: Record<OrbState, { label: string; color: string }> = {
   timeout: { label: "Transfert imminent...", color: "text-orange-500" },
 };
 
-function useOrbState(): OrbState {
+function useOrbState(isWarning: boolean): OrbState {
   const { status } = useConversationStatus();
   const { mode } = useConversationMode();
   const { permission } = useMicPermission();
@@ -25,13 +25,18 @@ function useOrbState(): OrbState {
   if (status === "connecting") return "connecting";
   if (status === "error") return "failed";
   if (status === "connected") {
+    if (isWarning) return "timeout";
     return mode === "speaking" ? "speaking" : "listening";
   }
   return "initial";
 }
 
-export function StatusOverlay() {
-  const orbState = useOrbState();
+interface StatusOverlayProps {
+  isWarning?: boolean;
+}
+
+export function StatusOverlay({ isWarning = false }: StatusOverlayProps) {
+  const orbState = useOrbState(isWarning);
   const { label, color } = STATE_CONFIG[orbState];
 
   return (

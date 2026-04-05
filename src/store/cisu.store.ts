@@ -21,7 +21,13 @@ export const useCisuStore = create<CisuState>((set, get) => ({
 
       if (existing) {
         return {
-          currentAlert: { ...existing, ...partial, updatedAt: now },
+          currentAlert: {
+            ...existing,
+            ...partial,
+            location: { ...existing.location, ...(partial.location ?? {}) },
+            victims: { ...existing.victims, ...(partial.victims ?? {}) },
+            updatedAt: now,
+          },
         };
       }
 

@@ -75,7 +75,7 @@ L'aboutissement de l'appel est la creation d'une fiche d'intervention. Le system
 
 ### Protocole d'Injection Technique
 
-- Format de la fiche d'alerte : **JSON** ou **XML**
+- Format de la fiche d'alerte : **JSON** ou **XML** (le MVP implemente JSON uniquement ; le format XML sera ajoute lors de l'integration SGE reelle)
 - Injection dans le broker de messages (AMQP/RabbitMQ) du Hub Sante de NexSIS
 - Header requis : `Content-Type: application/json` ou `application/xml`
 

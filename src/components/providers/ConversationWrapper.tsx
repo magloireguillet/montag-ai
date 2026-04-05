@@ -29,6 +29,10 @@ export function ConversationWrapper({ children }: { children: React.ReactNode })
           useSessionStore.getState().setStatus("disconnected");
         }
       }}
+      onError={(message) => {
+        console.error("[Montag] Conversation error:", message);
+        useSessionStore.getState().setStatus("error");
+      }}
       clientTools={{
         generer_fiche_cisu: async (parameters: Record<string, unknown>) => {
           const partial = formatCisuAlert(parameters);

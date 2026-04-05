@@ -60,6 +60,7 @@ L'agent doit soutenir une conversation naturelle sans blanc. L'architecture repo
   - Dashboard : `useConversationStatus()` pour l'etat de connexion
 - **ConversationProvider au niveau layout** : Le `ConversationProvider` doit wrapper les deux panels (Citoyen + Operateur) pour que le Dashboard accede aux evenements `onMessage` (transcriptions). Les hooks granulaires ne sont pas affectes par ce placement — ils ne subscribent qu'a leur slice.
 - **Gestion d'etat** : Zustand avec selectors pour le transit des donnees CISU du `client_tool_call` vers le tableau de bord operateur. Le callback `clientTools` etant une fonction plain JS (hors React), Zustand est le seul choix permettant `store.getState().updateAlert()` sans hook. Les selectors garantissent que le Dashboard re-render sans affecter l'Orb.
+- **Residence EU cote code** : Le `ConversationProvider` passe `serverLocation: "eu-residency"` pour router les connexions WebSocket vers les serveurs europeens d'ElevenLabs. Cette valeur est hardcodee (non configurable par env var) pour garantir la conformite. Les options Zero Retention et Entity Redaction sont activees cote dashboard ElevenLabs.
 
 ---
 

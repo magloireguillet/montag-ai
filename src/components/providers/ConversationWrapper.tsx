@@ -1,6 +1,7 @@
 "use client";
 
 import { ConversationProvider } from "@elevenlabs/react";
+import { ELEVENLABS_CONFIG } from "@/lib/elevenlabs.config";
 import { formatCisuAlert } from "@/lib/cisu/formatter";
 import { useCisuStore } from "@/store/cisu.store";
 import { useSessionStore } from "@/store/session.store";
@@ -14,6 +15,8 @@ function SessionGuard({ children }: { children: React.ReactNode }) {
 export function ConversationWrapper({ children }: { children: React.ReactNode }) {
   return (
     <ConversationProvider
+      serverLocation={ELEVENLABS_CONFIG.serverLocation}
+      overrides={ELEVENLABS_CONFIG.overrides}
       onMessage={(message) => {
         if (message.source === "user" || message.source === "ai") {
           useSessionStore.getState().addTranscript({

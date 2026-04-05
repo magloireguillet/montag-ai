@@ -30,7 +30,7 @@ export function ConversationWrapper({ children }: { children: React.ReactNode })
         }
       }}
       clientTools={{
-        generate_cisu_alert: async (parameters: Record<string, unknown>) => {
+        generer_fiche_cisu: async (parameters: Record<string, unknown>) => {
           const partial = formatCisuAlert(parameters);
           useCisuStore.getState().updateAlert(partial);
           return "Fiche CISU mise a jour avec succes.";

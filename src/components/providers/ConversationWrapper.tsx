@@ -3,6 +3,7 @@
 import { ConversationProvider } from "@elevenlabs/react";
 import { ELEVENLABS_CONFIG } from "@/lib/elevenlabs.config";
 import { formatCisuAlert } from "@/lib/cisu/formatter";
+import { getAlertCompleteness } from "@/lib/cisu/validators";
 import { useCisuStore } from "@/store/cisu.store";
 import { useSessionStore } from "@/store/session.store";
 import { useSessionGuard } from "@/hooks/useSessionGuard";
@@ -38,9 +39,20 @@ export function ConversationWrapper({ children }: { children: React.ReactNode })
       }}
       clientTools={{
         generer_fiche_cisu: async (parameters: Record<string, unknown>) => {
-          const partial = formatCisuAlert(parameters);
-          useCisuStore.getState().updateAlert(partial);
-          return "Fiche CISU mise a jour avec succes.";
+          try {
+            const partial = formatCisuAlert(parameters);
+            useCisuStore.getState().updateAlert(partial);
+            const alert = useCisuStore.getState().currentAlert;
+            const { percentage, missingFields } = getAlertCompleteness(alert);
+            console.info("[Montag] CISU alert updated:", { percentage, partial });
+            const missing = missingFields.length > 0
+              ? ` Champs manquants: ${missingFields.join(", ")}.`
+              : "";
+            return `Fiche CISU mise a jour (${percentage}% complete).${missing}`;
+          } catch (err) {
+            console.error("[Montag] generer_fiche_cisu failed:", err, parameters);
+            return "Erreur lors de la creation de la fiche. Veuillez reessayer.";
+          }
         },
       }}
     >

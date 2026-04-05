@@ -5,22 +5,24 @@ import type { CisuAlert, EdxlEnvelope } from "@/types/cisu.types";
  * Called from the clientTools callback (plain JS, outside React).
  */
 export function formatCisuAlert(params: Record<string, unknown>): Partial<CisuAlert> {
+  // Le dashboard ElevenLabs envoie les params en francais (adresse, nature_sinistre, etc.)
+  // Le code interne utilise l'anglais. On accepte les deux conventions.
   return {
-    nature: asString(params.nature),
+    nature: asString(params.nature_sinistre || params.nature),
     severity: parseSeverity(params.severity),
     urgency: parseUrgency(params.urgency),
     location: {
-      address: asString(params.address),
-      city: asString(params.city),
-      postalCode: asString(params.postal_code || params.postalCode),
+      address: asString(params.adresse || params.address),
+      city: asString(params.city || params.ville),
+      postalCode: asString(params.postal_code || params.postalCode || params.code_postal),
       lat: asNumber(params.lat),
       lng: asNumber(params.lng),
       complement: asString(params.complement),
     },
     victims: {
-      count: asInt(params.victim_count ?? params.victims),
-      injured: asInt(params.injured),
-      trapped: asInt(params.trapped),
+      count: asInt(params.nombre_victimes ?? params.victim_count ?? params.victims),
+      injured: asInt(params.injured || params.blesses),
+      trapped: asInt(params.trapped || params.coinces),
       description: asString(params.victim_description),
     },
     callerDescription: asString(params.caller_description || params.description),

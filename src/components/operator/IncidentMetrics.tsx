@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useCisuStore } from "@/store/cisu.store";
 
 const SEVERITY_COLORS: Record<string, string> = {
@@ -23,43 +24,47 @@ export function IncidentMetrics() {
 
   if (!alert) return null;
 
+  const badges = [
+    { key: "severity", label: "Severite", value: alert.severity, colorMap: SEVERITY_COLORS },
+    { key: "urgency", label: "Urgence", value: alert.urgency, colorMap: URGENCY_COLORS },
+  ];
+
   return (
     <div className="flex flex-wrap gap-2 p-4">
-      <Badge label="Severite" value={alert.severity} colorMap={SEVERITY_COLORS} />
-      <Badge label="Urgence" value={alert.urgency} colorMap={URGENCY_COLORS} />
+      {badges.map((b, i) => (
+        <motion.span
+          key={b.key}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: i * 0.1, type: "spring", stiffness: 400, damping: 15 }}
+          className={`px-3 py-1 rounded-full text-xs font-medium text-white ${
+            b.colorMap[b.value] ?? "bg-gray-600"
+          }`}
+        >
+          {b.label}: {b.value}
+        </motion.span>
+      ))}
       {alert.victims.count > 0 && (
-        <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-800 text-white">
+        <motion.span
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 400, damping: 15 }}
+          className="px-3 py-1 rounded-full text-xs font-medium bg-red-800 text-white"
+        >
           {alert.victims.count} victime{alert.victims.count > 1 ? "s" : ""}
-        </span>
+        </motion.span>
       )}
-      {alert.recommendedForces.map((force) => (
-        <span
+      {alert.recommendedForces.map((force, i) => (
+        <motion.span
           key={force}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.3 + i * 0.1, type: "spring", stiffness: 400, damping: 15 }}
           className="px-3 py-1 rounded-full text-xs font-medium bg-blue-800 text-white"
         >
           {force}
-        </span>
+        </motion.span>
       ))}
     </div>
-  );
-}
-
-function Badge({
-  label,
-  value,
-  colorMap,
-}: {
-  label: string;
-  value: string;
-  colorMap: Record<string, string>;
-}) {
-  return (
-    <span
-      className={`px-3 py-1 rounded-full text-xs font-medium text-white ${
-        colorMap[value] ?? "bg-gray-600"
-      }`}
-    >
-      {label}: {value}
-    </span>
   );
 }

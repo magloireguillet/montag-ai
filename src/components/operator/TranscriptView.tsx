@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { useSessionStore } from "@/store/session.store";
 
 export function TranscriptView() {
@@ -22,8 +23,11 @@ export function TranscriptView() {
   return (
     <div className="flex flex-col gap-2 p-4 overflow-y-auto max-h-[300px]">
       {lines.map((line) => (
-        <div
+        <motion.div
           key={line.id}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.25 }}
           className={`text-sm ${
             line.role === "user" ? "text-blue-300" : "text-green-300"
           }`}
@@ -32,7 +36,7 @@ export function TranscriptView() {
             {line.role === "user" ? "Appelant" : "Montag"}
           </span>
           : {line.text}
-        </div>
+        </motion.div>
       ))}
       <div ref={bottomRef} />
     </div>

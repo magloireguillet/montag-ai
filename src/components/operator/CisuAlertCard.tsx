@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useCisuStore } from "@/store/cisu.store";
 import { getAlertCompleteness } from "@/lib/cisu/validators";
 
@@ -17,7 +18,12 @@ export function CisuAlertCard() {
   const { percentage, missingFields } = getAlertCompleteness(alert);
 
   return (
-    <div className="p-4 space-y-3">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="p-4 space-y-3"
+    >
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-white">Fiche CISU</h3>
         <span className="text-xs text-gray-400">{percentage}% complete</span>
@@ -51,7 +57,7 @@ export function CisuAlertCard() {
           Champs manquants : {missingFields.join(", ")}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }
 
